@@ -4,8 +4,26 @@ import Link from 'next/link';
 import request from '../../axiosconfig/axios';
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import checkISAdmin from '../../checkAdminStatus/checkAdmin';
+
+
+
+
+
 
 export default function Home() {
+
+    useEffect(() => {
+        const check = async ()=>{
+            let checkdata = await checkISAdmin();
+            if (checkdata){
+                await router.push("/profile")
+            }
+        };
+        check();
+    }, [])
+
+
 
     const notify = (toastValue : string) => toast.error(toastValue, {
         position: "top-right",

@@ -6,11 +6,9 @@ import request from '../../../axiosconfig/axios';
 import checkISAdmin from '../../../checkAdminStatus/checkAdmin';
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import ThirdpartyUpdateModal from '../../../Components/ThirdpartyUpdateModal';
 
 
-
-export default function AddThirdParty() {
+export default function viewAllAdmin() {
     const notifyerror = (toastValue : string) => toast.error(toastValue, {
         position: "top-right",
         autoClose: 5000,
@@ -225,18 +223,6 @@ export default function AddThirdParty() {
                     </table>
                 </div>
 
-                {ThirdPartyClicked &&
-                    <div className='modal-customer-edit'>
-                        <ThirdpartyUpdateModal
-                            reloadTable={refreshThirdParties}
-                            thirdparty={currentClickedTable}
-                            closemodal={closemodal}
-                            errorToast={notifyerror}
-                            successToast={notifysuccess}
-                            />
-
-                    </div>
-                }
 
             </div>
 

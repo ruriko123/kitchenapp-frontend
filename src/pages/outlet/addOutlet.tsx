@@ -2,14 +2,13 @@ import React, {useState, useEffect, useContext} from 'react';
 import {useRouter} from 'next/router';
 import ScrollToTop from "react-scroll-to-top";
 import "../../styles/form.module.css"
-import axios from "axios";
 import request from '../../../axiosconfig/axios';
 import checkISAdmin from '../../../checkAdminStatus/checkAdmin';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
-export default function AddThirdParty() {
+export default function AddOutlet() {
 
 
     const notifyerror = (toastValue : string) => toast.error(toastValue, {
@@ -48,15 +47,10 @@ export default function AddThirdParty() {
     const router = useRouter();
 
 
-
     const [baseURL,
         setbaseURL] = useState("");
     const [email,
         setEmail] = useState("");
-    const [altPhone,
-        setAltPhone] = useState("");
-    const [pan,
-        setPan] = useState("");
     const [address,
         setAddress] = useState("");
     const [name,
@@ -69,14 +63,6 @@ export default function AddThirdParty() {
     };
     const handleemail = (e : any) => {
         setEmail(e.target
-            ?.value);
-    };
-    const handlealtPhone = (e : any) => {
-        setAltPhone(e.target
-            ?.value);
-    };
-    const handlepan = (e : any) => {
-        setPan(e.target
             ?.value);
     };
     const handleaddress = (e : any) => {
@@ -94,15 +80,13 @@ export default function AddThirdParty() {
     const handleThirdPartyAdd = async(e : any) => {
         e.preventDefault();
         let json = {
-            Name: name,
+            Outlet_Name: name,
             Address: address,
             Phone: phone,
-            Pan: pan,
-            AltPhone: altPhone,
             Email: email,
             baseURL: baseURL
         };
-        request.post("/addThirdparty", json)
+        request.post("/addRestaurant", json)
        .then((e:any)=>{
         
         notifysuccess(e?.data?.success);
@@ -113,16 +97,6 @@ export default function AddThirdParty() {
                         ?.error);
         });
 
-
-        // const res = await fetch(url, {
-        //     method: 'POST',
-        //     body: JSON.stringify(json),
-        //     credentials: 'include',
-        //     headers: {
-        //         "Content-Type": "application/json"
-        //     }
-        // })
-        // console.log(res);
     };
 
     return (
@@ -132,7 +106,7 @@ export default function AddThirdParty() {
             <div className='container-fluid container'>
                 <form  >
                 <div className="d-flex justify-content-center align-items-center align-content-center mt-auto">
-                        <span>Register Third party</span>
+                        <span>Register Restaurant</span>
 
                     </div>
                     <div className="form-group">
@@ -161,24 +135,6 @@ export default function AddThirdParty() {
                             placeholder="Phone"
                             onChange={(e)=>handlephone(e)}
                             required/>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="exampleInputPassword1">Alternate Phone</label>
-                        <input
-                            type="Phone"
-                            className="form-control"
-                            placeholder="Phone"
-                            onChange={(e)=>handlealtPhone(e)}
-                            />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="exampleInputPassword1">Tax number</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            placeholder="Tax number"
-                            onChange={(e)=>handlepan(e)}
-                            />
                     </div>
                     <div className="form-group">
                         <label htmlFor="exampleInputPassword1">Email</label>

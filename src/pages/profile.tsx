@@ -3,7 +3,7 @@ import {Button} from 'react-bootstrap';
 import {useRouter} from 'next/router';
 import Link from 'next/link';
 import checkISAdmin from '../../checkAdminStatus/checkAdmin';
-
+import request from '../../axiosconfig/axios';
 
 
 
@@ -27,7 +27,13 @@ export default function Profile() {
         // router.push(path);
       };
 
-
+    const handleLogout = ()=>{
+        request.post("/adminLogout").then((e)=>{
+            router.push("/login");
+        }).catch((e)=>{
+            console.log(e);
+        })
+    }
 
     return (
         <div className="container">
@@ -44,11 +50,20 @@ export default function Profile() {
   
 </div>
 <div className="mt-3 btn-group-vertical d-flex align-content-center align-items-center" role="group" aria-label="Basic example">
-  <button type="button" onClick={(e) => handlerouteClick(e, "/outlet/updateOutlet")} className="btn btn-secondary m-1">Verify Outlets</button>
-  <button type="button" onClick={(e) => handlerouteClick(e, "/outlet/viewOutlets")} className="btn btn-danger m-1">View Outlets</button>
-                <Button className="m-5"  >
+<Link href="/outlet/addOutlet">
+  <button type="button" onClick={(e) => handlerouteClick(e, "/outlet/addOutlet")} className="btn btn-danger m-1">Add Restaurant</button>
+
+    </Link>
+<Link href="/outlet/updateOutlet">
+<button type="button" onClick={(e) => handlerouteClick(e, "/outlet/updateOutlet")} className="btn btn-secondary m-1">View all Restaurants</button>
+
+    </Link>
+
+
+
+                <button type="button" className="m-5"  onClick={handleLogout} >
                     Sign Out
-                </Button>
+                </button>
 </div>
 
             </div>
