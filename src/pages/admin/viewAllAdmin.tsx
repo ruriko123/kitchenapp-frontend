@@ -30,9 +30,21 @@ export default function viewAllAdmin() {
         theme: "colored"
     });
 
+    const initialToastError = (toastValue : string) => toast.error(toastValue, {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        toastId: "initialtoast-error-id"
+    });
+
     const router = useRouter();
-    let [thirdPartiesData,
-        setthirdPartiesData] = useState([]);
+    let [adminData,
+        setadminData] = useState([]);
     useEffect(() => {
         const check = async() => {
             let checkdata = await checkISAdmin();
@@ -43,17 +55,20 @@ export default function viewAllAdmin() {
 
         check();
 
-        if (thirdPartiesData.length === 0) {
+        if (adminData.length === 0) {
             request
-                .get("/getThirdParties")
+                .get("/viewAllAdmin")
                 .then((e : any) => {
                     console.log(e
                         ?.data)
-                    setthirdPartiesData(e
+                    setadminData(e
                         ?.data);
                 })
                 .catch((e) => {
-                    // console.log(e);
+                    initialToastError(e
+                        ?.response
+                            ?.data
+                                ?.error);
                 })
 
         }
@@ -63,11 +78,11 @@ export default function viewAllAdmin() {
 
     const refreshThirdParties = async ()=>{
         request
-                .get("/getThirdParties")
+                .get("/viewAllAdmin")
                 .then((e : any) => {
                     console.log(e
                         ?.data)
-                    setthirdPartiesData(e
+                    setadminData(e
                         ?.data);
                         
                 })
@@ -81,7 +96,7 @@ export default function viewAllAdmin() {
     
     const MakeActive = async(id : string | number) => {
         request
-            .post("/thirdPartyactive", {id: id})
+            .post("/adminActive", {id: id})
             .then((e) => {
                 refreshThirdParties();
                 notifysuccess(e?.data?.success);
@@ -92,11 +107,11 @@ export default function viewAllAdmin() {
                         ?.data
                             ?.error);
             })
-
     };
+
     const MakeInActive = async(id : string | number) => {
         request
-        .post("/thirdPartyInactive", {id: id})
+        .post("/adminInActive", {id: id})
         .then((e) => {
             refreshThirdParties();
             notifysuccess(e?.data?.success);
@@ -109,18 +124,19 @@ export default function viewAllAdmin() {
         });
     };
 
-    const [ThirdPartyClicked,
-        setThirdPartyClicked] = useState(false)
-    const [currentClickedTable,
-        setcurrentClickedTable] = useState({});
-    const closemodal = () => {
-        setThirdPartyClicked(false);
-    };
-
-   
-    const updateThirdParty = async(clickedTable : any) => {
-        await setcurrentClickedTable(clickedTable);
-        setThirdPartyClicked(true);
+    const deleteAdmin = async(id : string | number) => {
+        request
+            .post("/deleteAdmin", {id: id})
+            .then((e) => {
+                refreshThirdParties();
+                notifysuccess(e?.data?.success);
+            })
+            .catch((e) => {
+                notifyerror(e
+                    ?.response
+                        ?.data
+                            ?.error);
+            })
     };
 
     return (
@@ -130,14 +146,14 @@ export default function viewAllAdmin() {
             <ToastContainer/>
 
             <div
-                className='container-fluid '
+                className='container-fluid container'
                 style={{
                 width: '100vw'
             }}>
                 <h1
                     className="d-flex justify-content-center align-items-center mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl">
                     <span
-                        className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">Third Parties</span>
+                        className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">Admin Accounts</span>
                 </h1>
                 <h1 className="flex items-center text-5xl font-extrabold dark:text-white">
                     <span
@@ -148,59 +164,24 @@ export default function viewAllAdmin() {
                         <thead className="thead-dark">
                             <tr>
                                 <th>S.N</th>
-                                <th>Company Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Alternate Phone</th>
-                                <th>Pan</th>
-                                <th>Address</th>
+                                <th>UserName</th>
                                 <th>isActive</th>
-                                <th>added Date</th>
-                                <th>added By</th>
                                 <th>Active</th>
                                 <th>Inactive</th>
+                                <th>Delete</th>
 
                             </tr>
                         </thead>
                         <tbody>
-                            {thirdPartiesData && thirdPartiesData.map((info : any, index) => {
+                            {adminData && adminData.map((info : any, index) => {
                                 return (
                                     <tr
                                         key={index}
                                         tabIndex={index}
-                                                                                className='cilcikable-tr '>
-                                        <th onClick={() => {
-                                        updateThirdParty(info)
-                                    }} className="table-danger" scope="row">{index + 1}</th>
-                                        <td onClick={() => {
-                                        updateThirdParty(info)
-                                    }} className="table-danger">{info.CompanyName}</td>
-                                        <td onClick={() => {
-                                        updateThirdParty(info)
-                                    }} className="table-danger">{info.Email}</td>
-                                        <td onClick={() => {
-                                        updateThirdParty(info)
-                                    }} className="table-danger">{info.Phone}</td>
-                                        <td onClick={() => {
-                                        updateThirdParty(info)
-                                    }} className="table-danger">{info.AltPhone || ""}</td>
-                                        <td onClick={() => {
-                                        updateThirdParty(info)
-                                    }} className="table-danger">{info.Pan}</td>
-                                        <td onClick={() => {
-                                        updateThirdParty(info)
-                                    }} className="table-danger">{info.Address}</td>
-                                        <td onClick={() => {
-                                        updateThirdParty(info)
-                                    }} className="table-danger">{info.isActive
-                                                ? "TRUE"
-                                                : "FALSE"}</td>
-                                        <td onClick={() => {
-                                        updateThirdParty(info)
-                                    }} className="table-danger">{info.addedDate}</td>
-                                        <td onClick={() => {
-                                        updateThirdParty(info)
-                                    }} className="table-danger">{info.addedBy}</td>
+                                       className='cilcikable-tr '>
+                                        <th className="table-danger" scope="row">{index + 1}</th>
+                                        <td className="table-danger">{info?.userName||""}</td>
+                                    <td  className="table-danger">{info?.isActive?"TRUE":"FALSE"}</td>
                                         <td className="bg-success">
                                             <button
                                                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
@@ -215,6 +196,17 @@ export default function viewAllAdmin() {
                                                 Inactive
                                             </button>
                                         </td>
+
+                                       {!info?.isMainAdmin &&
+                                        
+                                            <td className="bg-warning">
+                                            <button
+                                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                                                onClick={(e) => deleteAdmin(info.id)}>
+                                                Delete
+                                            </button>
+                                        </td>
+                                       } 
                                     </tr>
                                 )
                             })

@@ -32,6 +32,18 @@ export default function AddThirdParty() {
         theme: "colored"
     });
 
+
+    const initialToastError = (toastValue : string) => toast.error(toastValue, {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        toastId: "initialtoast-error-id"
+    });
     const router = useRouter();
     let [thirdPartiesData,
         setthirdPartiesData] = useState([]);
@@ -55,7 +67,10 @@ export default function AddThirdParty() {
                         ?.data);
                 })
                 .catch((e) => {
-                    // console.log(e);
+                    initialToastError(e
+                        ?.response
+                            ?.data
+                                ?.error);
                 })
 
         }
@@ -145,6 +160,11 @@ export default function AddThirdParty() {
                     <span
                         className="bg-blue-100 text-blue-800 text-2xl font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ml-2">Click to update</span>
                 </h1>
+               <div>
+            
+                </div>
+
+
                 <div className='table-responsive text-nowrap'>
                     <table className="table table-striped">
                         <thead className="thead-dark">
