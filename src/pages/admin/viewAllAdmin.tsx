@@ -6,6 +6,7 @@ import request from '../../../axiosconfig/axios';
 import checkISAdmin from '../../../checkAdminStatus/checkAdmin';
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Nav from '../../../Components/nav';
 
 
 export default function viewAllAdmin() {
@@ -143,6 +144,7 @@ export default function viewAllAdmin() {
         <div
             className="d-flex justify-content-center align-items-center align-content-center mt-auto">
             <ScrollToTop/>
+            <Nav/>
             <ToastContainer/>
 
             <div

@@ -7,6 +7,7 @@ import checkISAdmin from '../../../checkAdminStatus/checkAdmin';
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ThirdpartyUpdateModal from '../../../Components/ThirdpartyUpdateModal';
+import Nav from '../../../Components/nav';
 
 
 
@@ -143,6 +144,7 @@ export default function AddThirdParty() {
     return (
         <div
             className="d-flex justify-content-center align-items-center align-content-center mt-auto">
+            <Nav/>
             <ScrollToTop/>
             <ToastContainer/>
 

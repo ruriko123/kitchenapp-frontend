@@ -7,12 +7,15 @@ import checkISAdmin from '../../../checkAdminStatus/checkAdmin';
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import RestaurantUpdateModal from '../../../Components/RestaurantUpdateModal';
+import RestaurantThirdPartyLinkModal from '../../../Components/RestaurantThirdPartyLinkModal';
+import Nav from '../../../Components/nav';
 
 
 
 
 
 export default function updateOutlet() {
+
 
     const notifyerror = (toastValue : string) => toast.error(toastValue, {
         position: "top-right",
@@ -50,8 +53,8 @@ export default function updateOutlet() {
     });
 //getActiveRestaurant  getInactiveRestaurant
     const router = useRouter();
-    let [thirdPartiesData,
-        setthirdPartiesData] = useState([]);
+    let [restaurant,
+        setrestaurant] = useState([]);
 
         let [activeInactive,
             setactiveInactive] = useState("getInactiveRestaurant");
@@ -68,13 +71,13 @@ export default function updateOutlet() {
 
         check();
 
-        if (thirdPartiesData.length === 0) {
+        if (restaurant.length === 0) {
             request
                 .get(`/${activeInactive}`)
                 .then((e : any) => {
                     console.log(e
                         ?.data)
-                    setthirdPartiesData(e
+                    setrestaurant(e
                         ?.data);
                 })
                 .catch(async (e) => {
@@ -82,7 +85,7 @@ export default function updateOutlet() {
                         ?.response
                             ?.data
                                 ?.error);
-                                setthirdPartiesData([]);
+                                setrestaurant([]);
                 })
 
         }
@@ -90,13 +93,13 @@ export default function updateOutlet() {
     }, []);
 
 
-    const refreshThirdParties = async ()=>{
+    const refreshOutlets = async ()=>{
         request
                 .get(`/${activeInactive}`)
                 .then((e : any) => {
                     console.log(e
                         ?.data)
-                    setthirdPartiesData(e
+                    setrestaurant(e
                         ?.data);
                         
                 })
@@ -105,7 +108,7 @@ export default function updateOutlet() {
                         ?.response
                             ?.data
                                 ?.error);
-                                setthirdPartiesData([]);
+                                setrestaurant([]);
                 });
     };
     
@@ -113,7 +116,7 @@ export default function updateOutlet() {
         request
             .post("/restaurantActive", {id: id})
             .then((e) => {
-                refreshThirdParties();
+                refreshOutlets();
                 notifysuccess(e?.data?.success);
             })
             .catch((e) => {
@@ -128,7 +131,7 @@ export default function updateOutlet() {
         request
         .post("/restaurantInActive", {id: id})
         .then((e) => {
-            refreshThirdParties();
+            refreshOutlets();
             notifysuccess(e?.data?.success);
         })
         .catch((e) => {
@@ -139,18 +142,18 @@ export default function updateOutlet() {
         });
     };
 
-    const [ThirdPartyClicked,
-        setThirdPartyClicked] = useState(false)
+    const [outletClicked,
+        setoutletClicked] = useState(false)
     const [currentClickedTable,
         setcurrentClickedTable] = useState({});
     const closemodal = () => {
-        setThirdPartyClicked(false);
+        setoutletClicked(false);
     };
 
    
-    const updateThirdParty = async(clickedTable : any) => {
+    const updateOutlet = async(clickedTable : any) => {
         await setcurrentClickedTable(clickedTable);
-        setThirdPartyClicked(true);
+        setoutletClicked(true);
     };
     const [toggleStatus, settoggleStatus] = useState("INACTIVE");
     const toggleActiveinactive = async (e:any)=>{
@@ -165,7 +168,7 @@ export default function updateOutlet() {
                 .then((e : any) => {
                     console.log(e
                         ?.data)
-                    setthirdPartiesData(e
+                    setrestaurant(e
                         ?.data);
                 })
                 .catch((e) => {
@@ -173,14 +176,32 @@ export default function updateOutlet() {
                         ?.response
                             ?.data
                                 ?.error);
-                                setthirdPartiesData([]);
+                                setrestaurant([]);
                 });
-    }
+    };
+
+    const [thirdPartyLinksClicked,
+        setThirdPartyLinksClicked] = useState(false)
+    const [current3pLinkClickedID,
+        setcurrent3pLinkClickedID] = useState({});
+    const close3plinkModal = () => {
+        setThirdPartyLinksClicked(false);
+    };
+
+
+    const thirdPartyLinkClicked = async (clickedOutletID : any,outletName:any)=>{
+            console.log({id:clickedOutletID,name:outletName})
+            await setcurrent3pLinkClickedID({id:clickedOutletID,name:outletName});
+            setThirdPartyLinksClicked(true);
+    };
+
+
 
     return (
         <div
             className="d-flex justify-content-center align-items-center align-content-center mt-auto">
             <ScrollToTop/>
+            <Nav/>
             <ToastContainer/>
 
             <div
@@ -220,38 +241,39 @@ export default function updateOutlet() {
                                 
                                 <th>Inactive</th>
                                 }
+                                <th>Third Parties</th>
 
                             </tr>
                         </thead>
                         <tbody>
-                            {thirdPartiesData && thirdPartiesData.map((info : any, index) => {
+                            {restaurant && restaurant.map((info : any, index) => {
                                 return (
                                     <tr
                                         key={index}
                                         tabIndex={index}
                                                                                 className='cilcikable-tr '>
                                         <th onClick={() => {
-                                        updateThirdParty(info)
+                                        updateOutlet(info)
                                     }} className="table-danger" scope="row">{index + 1}</th>
                                         <td onClick={() => {
-                                        updateThirdParty(info)
+                                        updateOutlet(info)
                                     }} className="table-danger">{info.Name}</td>
                                         <td onClick={() => {
-                                        updateThirdParty(info)
+                                        updateOutlet(info)
                                     }} className="table-danger">{info.Email}</td>
                                         <td onClick={() => {
-                                        updateThirdParty(info)
+                                        updateOutlet(info)
                                     }} className="table-danger">{info.Phone}</td>
                                         <td onClick={() => {
-                                        updateThirdParty(info)
+                                        updateOutlet(info)
                                     }} className="table-danger">{info.Address}</td>
                                         <td onClick={() => {
-                                        updateThirdParty(info)
+                                        updateOutlet(info)
                                     }} className="table-danger">{info.isActive
                                                 ? "TRUE"
                                                 : "FALSE"}</td>
                                      <td onClick={() => {
-                                        updateThirdParty(info)
+                                        updateOutlet(info)
                                     }} className="table-danger">{info.addedDate}</td>
                                         
                                         {activeInactive==="getInactiveRestaurant" &&
@@ -275,6 +297,14 @@ export default function updateOutlet() {
                                             </button>
                                         </td>
                                          }
+                                    
+                                    <td className="bg-warning">
+                                            <button
+                                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                                                onClick={(e) => thirdPartyLinkClicked(info?.id,info?.Name)}>
+                                                Update
+                                            </button>
+                                        </td>
                                     </tr>
                                 )
                             })
@@ -283,10 +313,27 @@ export default function updateOutlet() {
                     </table>
                 </div>
 
-                {ThirdPartyClicked &&
+
+                {thirdPartyLinksClicked && 
+                
+                <div className='modal-customer-edit'>
+                <RestaurantThirdPartyLinkModal
+                    reloadTable={refreshOutlets}
+                    restaurantData={current3pLinkClickedID}
+                    closemodal={close3plinkModal}
+                    errorToast={notifyerror}
+                    successToast={notifysuccess}
+                    />
+
+            </div>
+                
+                }
+
+
+                {outletClicked &&
                     <div className='modal-customer-edit'>
                         <RestaurantUpdateModal
-                            reloadTable={refreshThirdParties}
+                            reloadTable={refreshOutlets}
                             restaurantData={currentClickedTable}
                             closemodal={closemodal}
                             errorToast={notifyerror}
