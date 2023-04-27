@@ -17,6 +17,8 @@
     "paths": {
       "@/*": ["./src/*"],
       "@scss/*": ["./src/styles/sass/*"],
+      "@components/*":["./Components/*"],
+      "@checkadmin/*":["./checkAdminStatus/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
