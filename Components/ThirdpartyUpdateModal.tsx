@@ -53,7 +53,7 @@ const ThirdpartyUpdateModal : FC < Props > = ({successToast,errorToast,reloadTab
             setaltPhone(thirdparty
                 ?.AltPhone || "");
             setvatno(thirdparty
-                ?.vat || "");
+                ?.Pan || "");
             setcompanyName(thirdparty
                 ?.CompanyName || "");
         }

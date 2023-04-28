@@ -205,7 +205,7 @@ export default function updateOutlet() {
             <ToastContainer/>
 
             <div
-                className='container-fluid '
+                className='container-fluid container'
                 style={{
                 width: '100vw'
             }}>
