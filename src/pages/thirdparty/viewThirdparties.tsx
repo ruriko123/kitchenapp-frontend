@@ -8,10 +8,21 @@ import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ThirdpartyUpdateModal from '../../../Components/ThirdpartyUpdateModal';
 import Nav from '../../../Components/nav';
-
-
+import Select from 'react-select';
 
 export default function AddThirdParty() {
+
+    const customStyles = {
+        option: (base : any, {data, isDisabled, isFocused, isSelected} : any) => {
+            return {
+                ...base,
+                backgroundColor: isFocused
+                    ? "gray"
+                    : "black"
+            };
+        }
+    };
+
     const notifyerror = (toastValue : string) => toast.error(toastValue, {
         position: "top-right",
         autoClose: 5000,
@@ -33,7 +44,6 @@ export default function AddThirdParty() {
         theme: "colored"
     });
 
-
     const initialToastError = (toastValue : string) => toast.error(toastValue, {
         position: "top-right",
         autoClose: 1000,
@@ -48,6 +58,9 @@ export default function AddThirdParty() {
     const router = useRouter();
     let [thirdPartiesData,
         setthirdPartiesData] = useState([]);
+
+    const [thirdPartiesNameArray,
+        setthirdPartiesNameArray] = useState([]);
     useEffect(() => {
         const check = async() => {
             let checkdata = await checkISAdmin();
@@ -66,6 +79,23 @@ export default function AddThirdParty() {
                         ?.data)
                     setthirdPartiesData(e
                         ?.data);
+
+                    let thirdPartyData = e
+                        ?.data || [];
+                    let thirdPartyNameArray : any = [];
+                    for (let x in thirdPartyData) {
+                        let thirdPartynametemp = thirdPartyData[x]
+                            ?.CompanyName;
+                        let adminObject = {
+                            value: thirdPartynametemp,
+                            label: thirdPartynametemp
+                        };
+                        thirdPartyNameArray.push(adminObject);
+                    };
+
+                    thirdPartyNameArray.unshift({value: "ALL", label: "ALL"});
+                    setthirdPartiesNameArray(thirdPartyNameArray);
+                    console.log(thirdPartyNameArray)
                 })
                 .catch((e) => {
                     initialToastError(e
@@ -78,31 +108,46 @@ export default function AddThirdParty() {
 
     }, []);
 
-
-    const refreshThirdParties = async ()=>{
+    const refreshThirdParties = async() => {
         request
-                .get("/getThirdParties")
-                .then((e : any) => {
-                    console.log(e
-                        ?.data)
-                    setthirdPartiesData(e
-                        ?.data);
-                        
-                })
-                .catch((e) => {
-                    notifyerror(e
-                        ?.response
-                            ?.data
-                                ?.error);
-                });
+            .get("/getThirdParties")
+            .then((e : any) => {
+                console.log(e
+                    ?.data)
+                setthirdPartiesData(e
+                    ?.data);
+                    let thirdPartyData = e
+                    ?.data || [];
+                let thirdPartyNameArray : any = [];
+                for (let x in thirdPartyData) {
+                    let thirdPartynametemp = thirdPartyData[x]
+                        ?.CompanyName;
+                    let adminObject = {
+                        value: thirdPartynametemp,
+                        label: thirdPartynametemp
+                    };
+                    thirdPartyNameArray.push(adminObject);
+                };
+
+                thirdPartyNameArray.unshift({value: "ALL", label: "ALL"});
+                setthirdPartiesNameArray(thirdPartyNameArray);
+            })
+            .catch((e) => {
+                notifyerror(e
+                    ?.response
+                        ?.data
+                            ?.error);
+            });
     };
-    
+
     const MakeActive = async(id : string | number) => {
         request
             .post("/thirdPartyactive", {id: id})
             .then((e) => {
                 refreshThirdParties();
-                notifysuccess(e?.data?.success);
+                notifysuccess(e
+                    ?.data
+                        ?.success);
             })
             .catch((e) => {
                 notifyerror(e
@@ -114,17 +159,19 @@ export default function AddThirdParty() {
     };
     const MakeInActive = async(id : string | number) => {
         request
-        .post("/thirdPartyInactive", {id: id})
-        .then((e) => {
-            refreshThirdParties();
-            notifysuccess(e?.data?.success);
-        })
-        .catch((e) => {
-            notifyerror(e
-                ?.response
+            .post("/thirdPartyInactive", {id: id})
+            .then((e) => {
+                refreshThirdParties();
+                notifysuccess(e
                     ?.data
-                        ?.error);
-        });
+                        ?.success);
+            })
+            .catch((e) => {
+                notifyerror(e
+                    ?.response
+                        ?.data
+                            ?.error);
+            });
     };
 
     const [ThirdPartyClicked,
@@ -135,11 +182,17 @@ export default function AddThirdParty() {
         setThirdPartyClicked(false);
     };
 
-   
     const updateThirdParty = async(clickedTable : any) => {
         await setcurrentClickedTable(clickedTable);
         setThirdPartyClicked(true);
     };
+
+
+    const [selectedThirdPartywithName,
+        setselectedThirdPartywithName] = useState("ALL");
+    const changeselectedThirdPartywithName = async(e:any)=>{
+            setselectedThirdPartywithName(e?.value);
+        };
 
     return (
         <div
@@ -158,14 +211,20 @@ export default function AddThirdParty() {
                     <span
                         className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">Third Parties</span>
                 </h1>
-                <h1 className="flex items-center text-5xl font-extrabold dark:text-white">
-                    <span
-                        className="bg-blue-100 text-blue-800 text-2xl font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ml-2">Click to update</span>
-                </h1>
-               <div>
-            
-                </div>
-
+                <Select
+                     className="basic-single"
+                     classNamePrefix="select"
+                    styles={customStyles}
+                    instanceId = "select-box"
+                    defaultValue={{
+                    value: "ALL",
+                    label: "ALL"
+                }}
+                name="color"
+                    options={thirdPartiesNameArray}
+                    onChange={(e:any)=>{changeselectedThirdPartywithName(e)}}
+                    />
+                <div></div>
 
                 <div className='table-responsive text-nowrap'>
                     <table className="table table-striped">
@@ -187,44 +246,69 @@ export default function AddThirdParty() {
                             </tr>
                         </thead>
                         <tbody>
-                            {thirdPartiesData && thirdPartiesData.map((info : any, index) => {
+                            {thirdPartiesData && thirdPartiesData.filter((value:any) => {
+            if(selectedThirdPartywithName==="" || selectedThirdPartywithName==="ALL"){
+                return value.CompanyName === value.CompanyName;
+            } else {
+
+                return value.CompanyName === selectedThirdPartywithName;
+            }
+          }).map((info : any, index) => {
                                 return (
-                                    <tr
-                                        key={index}
-                                        tabIndex={index}
-                                                                                className='cilcikable-tr '>
-                                        <th onClick={() => {
-                                        updateThirdParty(info)
-                                    }} className="table-danger" scope="row">{index + 1}</th>
-                                        <td onClick={() => {
-                                        updateThirdParty(info)
-                                    }} className="table-danger">{info.CompanyName}</td>
-                                        <td onClick={() => {
-                                        updateThirdParty(info)
-                                    }} className="table-danger">{info.Email}</td>
-                                        <td onClick={() => {
-                                        updateThirdParty(info)
-                                    }} className="table-danger">{info.Phone}</td>
-                                        <td onClick={() => {
-                                        updateThirdParty(info)
-                                    }} className="table-danger">{info.AltPhone || ""}</td>
-                                        <td onClick={() => {
-                                        updateThirdParty(info)
-                                    }} className="table-danger">{info.Pan}</td>
-                                        <td onClick={() => {
-                                        updateThirdParty(info)
-                                    }} className="table-danger">{info.Address}</td>
-                                        <td onClick={() => {
-                                        updateThirdParty(info)
-                                    }} className="table-danger">{info.isActive
+                                    <tr key={index} tabIndex={index} className='cilcikable-tr '>
+                                        <th
+                                            onClick={() => {
+                                            updateThirdParty(info)
+                                        }}
+                                            className="table-danger"
+                                            scope="row">{index + 1}</th>
+                                        <td
+                                            onClick={() => {
+                                            updateThirdParty(info)
+                                        }}
+                                            className="table-danger">{info.CompanyName}</td>
+                                        <td
+                                            onClick={() => {
+                                            updateThirdParty(info)
+                                        }}
+                                            className="table-danger">{info.Email}</td>
+                                        <td
+                                            onClick={() => {
+                                            updateThirdParty(info)
+                                        }}
+                                            className="table-danger">{info.Phone}</td>
+                                        <td
+                                            onClick={() => {
+                                            updateThirdParty(info)
+                                        }}
+                                            className="table-danger">{info.AltPhone || ""}</td>
+                                        <td
+                                            onClick={() => {
+                                            updateThirdParty(info)
+                                        }}
+                                            className="table-danger">{info.Pan}</td>
+                                        <td
+                                            onClick={() => {
+                                            updateThirdParty(info)
+                                        }}
+                                            className="table-danger">{info.Address}</td>
+                                        <td
+                                            onClick={() => {
+                                            updateThirdParty(info)
+                                        }}
+                                            className="table-danger">{info.isActive
                                                 ? "TRUE"
                                                 : "FALSE"}</td>
-                                        <td onClick={() => {
-                                        updateThirdParty(info)
-                                    }} className="table-danger">{info.addedDate}</td>
-                                        <td onClick={() => {
-                                        updateThirdParty(info)
-                                    }} className="table-danger">{info.addedBy}</td>
+                                        <td
+                                            onClick={() => {
+                                            updateThirdParty(info)
+                                        }}
+                                            className="table-danger">{info.addedDate}</td>
+                                        <td
+                                            onClick={() => {
+                                            updateThirdParty(info)
+                                        }}
+                                            className="table-danger">{info.addedBy}</td>
                                         <td className="bg-success">
                                             <button
                                                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
@@ -247,18 +331,16 @@ export default function AddThirdParty() {
                     </table>
                 </div>
 
-                {ThirdPartyClicked &&
-                    <div className='modal-customer-edit'>
-                        <ThirdpartyUpdateModal
-                            reloadTable={refreshThirdParties}
-                            thirdparty={currentClickedTable}
-                            closemodal={closemodal}
-                            errorToast={notifyerror}
-                            successToast={notifysuccess}
-                            />
+                {ThirdPartyClicked && <div className='modal-customer-edit'>
+                    <ThirdpartyUpdateModal
+                        reloadTable={refreshThirdParties}
+                        thirdparty={currentClickedTable}
+                        closemodal={closemodal}
+                        errorToast={notifyerror}
+                        successToast={notifysuccess}/>
 
-                    </div>
-                }
+                </div>
+}
 
             </div>
 
