@@ -18,7 +18,9 @@
       "@/*": ["./src/*"],
       "@scss/*": ["./src/styles/sass/*"],
       "@components/*":["./Components/*"],
-      "@checkadmin/*":["./checkAdminStatus/*"]
+      "@checkadmin/*":["./checkAdminStatus/*"],
+      "@basecss/*":["./src/styles/*"],
+      "@axiosrequest/*":["./axiosconfig/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

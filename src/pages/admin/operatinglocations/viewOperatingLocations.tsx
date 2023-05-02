@@ -301,8 +301,6 @@ export default function viewAllOperatingLocations() {
                 </div>
 
             </div>
-
         </div>
-
     )
 }
