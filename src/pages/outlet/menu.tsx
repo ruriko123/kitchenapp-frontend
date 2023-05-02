@@ -35,25 +35,6 @@ export default function menu() {
     };
 
 
-    // const handleExcelUpload = async(e:any) => {
-
-    //     const file = e?.target?.files[0];
-    // if(!file){
-    //     return;
-    // };
-    // const data = await file.arrayBuffer();
-    // const workbook = XLSX.read(data);
-    // const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-    // const jsonData = XLSX.utils.sheet_to_json(worksheet, {
-    //     header: 1,
-    //     defval: "",
-    // });
-
-    // //console.log(e.target.files[0]);
-    // //console.log(workbook);
-    // console.log(jsonData);
-    // };
-
 
     return (
         <div className="Adminpage">
@@ -70,9 +51,9 @@ export default function menu() {
                 onClick={(e) => handlerouteClick(e, "/outlet/menu/addmenu")}
                 className="text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Upload Menu</button> </Link>
 
-                <Link href = "/admin/operatinglocations/viewOperatingLocations" > <button
+                <Link href = "/outlet/menu/viewMenu" > <button
                 type="button"
-                onClick={(e) => handlerouteClick(e, "/admin/operatinglocations/viewOperatingLocations")}
+                onClick={(e) => handlerouteClick(e, "/outlet/menu/viewMenu")}
                 className="text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Edit Menu</button> </Link>
 
 
