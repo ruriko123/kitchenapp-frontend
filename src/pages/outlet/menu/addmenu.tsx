@@ -169,11 +169,9 @@ export default function OutletMenu() {
             ?.value);
     };
 
-    const handleExcelUpload = async(e : any, info : any) => {
-        let id = info
-            ?.id;
-        let restaurantName = info
-            ?.Name;
+    const handleExcelUpload = async(e : any, infoid : any,infoName : any) => {
+        let id = infoid;
+        let restaurantName = infoName;
         const file = e
             ?.target
                 ?.files[0];
@@ -181,8 +179,6 @@ export default function OutletMenu() {
         if (!file) {
             return;
         };
-
-        
         const data = await file.arrayBuffer();
         const workbook = XLSX.read(data);
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -192,6 +188,7 @@ export default function OutletMenu() {
                 header: 1,
                 defval: ""
             });
+            console.log(id,restaurantName)
         request
             .post("/uploadMenu", {
             menudata: jsonData,
@@ -297,15 +294,15 @@ export default function OutletMenu() {
                                         <td className="table-danger">{info.addedDate}</td>
 
                                         <td className="bg-secondary">
-                                            <label htmlFor="inputField" className="btn btn-info">Upload</label>
+                                            <label htmlFor={`${info?.Name}${info?.id}`} className="btn btn-info">Upload</label>
                                             <input
-                                                id="inputField"
+                                                id={`${info?.Name}${info?.id}`}
                                                 style={{
                                                 display: "none"
                                             }}
                                                 type="file"
                                                 accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                                                onChange={(e) => handleExcelUpload(e, info)}
+                                                onChange={(e) => handleExcelUpload(e, info?.id,info?.Name)}
                                                 required/>
                                         </td>
                                     </tr>
