@@ -64,7 +64,14 @@ export default function Profile() {
                         onClick={(e) => handlerouteClick(e, "/thirdparty")}
                         className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">ThirdParty</button>
                 </Link>
-            </div> 
+
+                <Link href="/notifications/massnotification">
+                    <button
+                        type="button"
+                        onClick={(e) => handlerouteClick(e, "/notifications/massnotification")}
+                        className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">Mass Notification</button>
+                </Link>
+            </div>
                 <div className = "mt-3 btn-group-vertical d-flex align-content-center align-items-center" role = "group" aria-label = "Basic example"> 
                 
                 <button type="button" className="m-5"  onClick={handleLogout} >

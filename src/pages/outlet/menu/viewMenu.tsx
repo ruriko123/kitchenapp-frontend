@@ -13,39 +13,53 @@ import {DownloadTableExcel} from 'react-export-table-to-excel';
 export default function updateOutlet() {
     const tableRef = useRef(null);
 
-    const notifyerror = (toastValue : string) => toast.error(toastValue, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored"
-    });
+    const notifyerror = (toastValue : string) => {
+        if (toastValue) {
+            toast.error(toastValue, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored"
+            })
+        };
+    };
 
-    const initialToastError = (toastValue : string) => toast.error(toastValue, {
-        position: "top-right",
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        toastId: "initialtoast-error-id"
-    });
+    const initialToastError = (toastValue : string) => {
+        if(toastValue){
+            toast.error(toastValue, {
+                position: "top-right",
+                autoClose: 1000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                toastId: "initialtoast-error-id"
+            });
+        };
+    };
 
-    const notifysuccess = (toastValue : string) => toast.success(toastValue, {
-        position: "top-right",
-        autoClose: 3500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored"
-    });
+    const notifysuccess = (toastValue : string) =>{
+        if(toastValue){
+
+            toast.success(toastValue, {
+                position: "top-right",
+                autoClose: 3500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored"
+            });
+        };
+    };
+
     //getActivemenu  getInactivemenu
     const router = useRouter();
     let [menu,
@@ -122,10 +136,6 @@ export default function updateOutlet() {
         };
     }, [selectedRestaurant]);
 
-
-
-
-
     const customStyles = {
         option: (base : any, {data, isDisabled, isFocused, isSelected} : any) => {
             return {
@@ -139,34 +149,34 @@ export default function updateOutlet() {
 
     const refreshOutlets = async() => {
         request
-                .post(`/menu`, {restaurantID: selectedRestaurant})
-                .then((e : any) => {
-                    console.log(e
-                        ?.data)
-                    setmenu(e
-                        ?.data);
-                    let outletdata = e
-                        ?.data || [];
-                    let menuNamearray : any = [];
-                    for (let x in outletdata) {
-                        let menuName = outletdata[x]
-                            ?.ItemName;
-                        let menuNameobject = {
-                            value: menuName,
-                            label: menuName
-                        };
-                        menuNamearray.push(menuNameobject);
+            .post(`/menu`, {restaurantID: selectedRestaurant})
+            .then((e : any) => {
+                console.log(e
+                    ?.data)
+                setmenu(e
+                    ?.data);
+                let outletdata = e
+                    ?.data || [];
+                let menuNamearray : any = [];
+                for (let x in outletdata) {
+                    let menuName = outletdata[x]
+                        ?.ItemName;
+                    let menuNameobject = {
+                        value: menuName,
+                        label: menuName
                     };
-                    menuNamearray.unshift({value: "ALL", label: "ALL"});
-                    setmenuNamearray(menuNamearray);
-                })
-                .catch(async(e) => {
-                    initialToastError(e
-                        ?.response
-                            ?.data
-                                ?.error || "");
-                    setmenu([]);
-                });
+                    menuNamearray.push(menuNameobject);
+                };
+                menuNamearray.unshift({value: "ALL", label: "ALL"});
+                setmenuNamearray(menuNamearray);
+            })
+            .catch(async(e) => {
+                initialToastError(e
+                    ?.response
+                        ?.data
+                            ?.error || "");
+                setmenu([]);
+            });
 
     };
 
@@ -248,10 +258,10 @@ export default function updateOutlet() {
     const changeselectedItem = async(e : any) => {
         setselectedItem(e
             ?.value);
-            setcostPrice(0);
-            setsellingPrice(0);
-            setsellingPricewithTax(0);
-            setdescription("");
+        setcostPrice(0);
+        setsellingPrice(0);
+        setsellingPricewithTax(0);
+        setdescription("");
 
     };
     const [costPrice,
@@ -286,37 +296,38 @@ export default function updateOutlet() {
 
     };
 
+    const savechanges = async(itemid : any) => {
+        console.log(itemid, costPrice, sellingPrice, sellingPricewithTax, description)
 
-    const savechanges = async (itemid:any)=>{
-        console.log(itemid,costPrice,sellingPrice,sellingPricewithTax,description)
-        
-        
-        let menuupdatedata:any = {};
-        menuupdatedata["itemid"]=itemid;
-        if(costPrice && !(costPrice===0)){
-            menuupdatedata["costPrice"]=costPrice
+        let menuupdatedata : any = {};
+        menuupdatedata["itemid"] = itemid;
+        if (costPrice && !(costPrice === 0)) {
+            menuupdatedata["costPrice"] = costPrice
         };
-        if(sellingPrice && !(sellingPrice===0)){
-            menuupdatedata["sellingPrice"]=sellingPrice
+        if (sellingPrice && !(sellingPrice === 0)) {
+            menuupdatedata["sellingPrice"] = sellingPrice
         };
-        if(sellingPricewithTax && !(sellingPricewithTax===0)){
-            menuupdatedata["sellingPricewithTax"]=sellingPricewithTax
+        if (sellingPricewithTax && !(sellingPricewithTax === 0)) {
+            menuupdatedata["sellingPricewithTax"] = sellingPricewithTax
         };
-        if(description && !(description==="")){
-            menuupdatedata["description"]=description
+        if (description && !(description === "")) {
+            menuupdatedata["description"] = description
         };
 
-        request.post("/updateMenuItem",menuupdatedata).then((e:any)=>{
-            notifysuccess(e
-                ?.data
-                    ?.success);
-                    refreshOutlets();
-        }).catch((e:any)=>{
-            notifyerror(e
-                ?.response
+        request
+            .post("/updateMenuItem", menuupdatedata)
+            .then((e : any) => {
+                notifysuccess(e
                     ?.data
-                        ?.error);
-        })
+                        ?.success);
+                refreshOutlets();
+            })
+            .catch((e : any) => {
+                notifyerror(e
+                    ?.response
+                        ?.data
+                            ?.error);
+            })
 
     };
 
@@ -395,9 +406,8 @@ export default function updateOutlet() {
                                         <th>description</th>
                                         <th>Taxable</th>
                                         <th>isActive</th>
-                                        {!(selectedItem==="ALL")&&
-                                        <th>update</th>
-                                        }
+                                        {!(selectedItem === "ALL") && <th>update</th>
+}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -429,8 +439,7 @@ export default function updateOutlet() {
                                                     }}
                                                         defaultValue={info.costPrice || ""}
                                                         placeholder="Cost Price"
-                                                        disabled={(selectedItem==="ALL")}
-                                                        />
+                                                        disabled={(selectedItem === "ALL")}/>
 
                                                 </td>
                                                 <td className="table-danger">
@@ -448,7 +457,7 @@ export default function updateOutlet() {
                                                             ?.IDMenu, "sellingPrice")
                                                     }}
                                                         placeholder="Selling Price"
-                                                        disabled={(selectedItem==="ALL")}/>
+                                                        disabled={(selectedItem === "ALL")}/>
                                                 </td>
                                                 <td className="table-danger">
                                                     <input
@@ -464,7 +473,7 @@ export default function updateOutlet() {
                                                         handleItemChange(e, info
                                                             ?.IDMenu, "sellingPricewithTax")
                                                     }}
-                                                    disabled={(selectedItem==="ALL")}
+                                                        disabled={(selectedItem === "ALL")}
                                                         placeholder="Selling Price with tax"/>
 
                                                 </td>
@@ -482,7 +491,7 @@ export default function updateOutlet() {
                                                         handleItemChange(e, info
                                                             ?.IDMenu, "description")
                                                     }}
-                                                    disabled={(selectedItem==="ALL")}
+                                                        disabled={(selectedItem === "ALL")}
                                                         placeholder="Description"/>
 
                                                 </td>
@@ -516,20 +525,20 @@ export default function updateOutlet() {
                                                                 Make Active
                                                             </button>}</td>
 
-                                                            {!(selectedItem==="ALL")&& <td className="table-danger">{showUpdateButton
-                                                            ? <button
-                                                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-                                                                    onClick={(e) => savechanges(info
-                                                                    ?.IDMenu)}>
-                                                                    Save changes
-                                                                </button>
-
-                                                            : <button
-                                                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-                                                                No changes made.
+                                                {!(selectedItem === "ALL") && <td className="table-danger">{showUpdateButton
+                                                        ? <button
+                                                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                                                                onClick={(e) => savechanges(info
+                                                                ?.IDMenu)}>
+                                                                Save changes
                                                             </button>
-                                                            }</td>
-                                                        }
+
+                                                        : <button
+                                                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+                                                            No changes made.
+                                                        </button>
+}</td>
+}
 
                                             </tr>
 
